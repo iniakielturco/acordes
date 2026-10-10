@@ -17,7 +17,7 @@
     <meta name="apple-mobile-web-app-title" content="Acordes" />
 
     <title>Acordes</title>
-    <script type="module" crossorigin src="./assets/index-CqjMfhE8.js"></script>
+    <script type="module" crossorigin src="./assets/index-DWBkcOFL.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/jsx-runtime-QtymfJMM.js">
     <link rel="modulepreload" crossorigin href="./assets/music-B8Yr91nf.js">
     <link rel="modulepreload" crossorigin href="./assets/ChordDiagram-Beo20OdN.js">
@@ -25,5 +25,48 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- Rescate: si la app no arranca (en el iPhone quedaba la pantalla en
+         blanco, sin forma de llegar a Ajustes), a los 8 segundos se muestra el
+         error y dos salidas. Va acá, sin depender del resto del código, para
+         que ande aunque lo que falle sea justamente eso. -->
+    <script>
+      (function () {
+        var errores = [];
+        var anotar = function (m) { errores.push(String(m).slice(0, 300)); };
+        addEventListener('error', function (e) { anotar(e.message || (e.target && e.target.src) || 'error'); }, true);
+        addEventListener('unhandledrejection', function (e) { anotar(e.reason && e.reason.message || e.reason); });
+        setTimeout(function () {
+          var raiz = document.getElementById('root');
+          if (!raiz || raiz.childElementCount) return;
+          var boton = 'display:block;width:100%;margin:12px 0;padding:14px;font-size:17px;border-radius:10px;border:1px solid #888;background:#2a2f38;color:#fff';
+          var caja = document.createElement('div');
+          caja.style.cssText = 'padding:60px 20px;font:16px -apple-system,sans-serif;background:#1b1e24;color:#eee;min-height:100vh;box-sizing:border-box';
+          caja.innerHTML =
+            '<h2>Acordes no arrancó</h2>' +
+            '<p>Probá primero recargar. Si sigue igual, borrá los datos y volvé a cargar el .zip desde Ajustes.</p>' +
+            '<button id="r1" style="' + boton + '">Recargar sin caché</button>' +
+            '<button id="r2" style="' + boton + ';background:#7a2a2a">Borrar los datos de este iPhone</button>' +
+            '<pre id="r3" style="white-space:pre-wrap;font-size:12px;opacity:.7"></pre>';
+          document.body.appendChild(caja);
+          document.getElementById('r3').textContent = errores.join('\n') || 'Sin errores registrados: la app quedó esperando.';
+          var limpiarCache = function () {
+            var p = [];
+            if (navigator.serviceWorker) p.push(navigator.serviceWorker.getRegistrations().then(function (rs) { return Promise.all(rs.map(function (r) { return r.unregister(); })); }));
+            if (window.caches) p.push(caches.keys().then(function (ks) { return Promise.all(ks.map(function (k) { return caches.delete(k); })); }));
+            return Promise.all(p).catch(function () {});
+          };
+          document.getElementById('r1').onclick = function () {
+            limpiarCache().then(function () { location.reload(); });
+          };
+          document.getElementById('r2').onclick = function () {
+            if (!confirm('Se borran canciones, listas y portadas de este iPhone. El Mac no se toca.')) return;
+            limpiarCache().then(function () {
+              var pedido = indexedDB.deleteDatabase('acordes');
+              pedido.onsuccess = pedido.onerror = pedido.onblocked = function () { location.reload(); };
+            });
+          };
+        }, 8000);
+      })();
+    </script>
   </body>
 </html>
