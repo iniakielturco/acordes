@@ -1,6 +1,6 @@
 // Generado por vite.config.ts. No editar.
-const CACHE = 'acordes-1.117.0';
-const ARCHIVOS = ["./","./assets/index-DXXaAfiD.js","./assets/AcordesPage-CDiKL43q.js","./assets/AfinadorPage-BTypHCFT.js","./assets/Aprender-un_ai_fO.js","./assets/ChordDiagram-wwfpgDGU.js","./assets/CirculoPage-sGQWogRN.js","./assets/MetronomePage-C-AckCCL.js","./assets/OidoPage-oadSx77K.js","./assets/ScalesPage-Cmb35zeD.js","./assets/audio-PWoMgh92.js","./assets/music-B8Yr91nf.js","./assets/useSonarAcordes-Cyt8fIRN.js","./assets/index-Dp41w0PR.css"];
+const CACHE = 'acordes-1.118.0';
+const ARCHIVOS = ["./","./assets/index-BKR8H2aW.js","./assets/AcordesPage-CDiKL43q.js","./assets/AfinadorPage-COP074ZG.js","./assets/Aprender-un_ai_fO.js","./assets/ChordDiagram-wwfpgDGU.js","./assets/CirculoPage-B5JcGhN6.js","./assets/MetronomePage-BW8rQkd1.js","./assets/OidoPage-C-b8JpNv.js","./assets/ScalesPage-BaSe9Tvs.js","./assets/audio-PWoMgh92.js","./assets/music-B8Yr91nf.js","./assets/useSonarAcordes-Cyt8fIRN.js","./assets/index-Dp41w0PR.css"];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ARCHIVOS)).then(() => self.skipWaiting()));
